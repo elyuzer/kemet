@@ -261,7 +261,7 @@ class CreateCustomersTables extends Migration
         Schema::create('publishers', function(Blueprint $table){
             $table->id();
             $table->uuid('uuid');
-            $table->string('name')
+            $table->string('name');
             $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
