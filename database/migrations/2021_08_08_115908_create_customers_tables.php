@@ -26,7 +26,7 @@ class CreateCustomersTables extends Migration
             $table->uuid('uuid');
             $table->unsignedBigInteger('payment_type_id');
             $table->string('name');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
             $table->foreign('payment_type_id')->references('id')->on('payment_types')->onUpdate('cascade')->onDelete('cascade');
@@ -77,7 +77,7 @@ class CreateCustomersTables extends Migration
             $table->dateTime('start');
             $table->dateTime('end');
             $table->integer('order');
-            $table->description('description');
+            $table->string('description')->nullable();
             $table->boolean('status');
             $table->softDeletes();
             $table->timestamps();
@@ -96,7 +96,7 @@ class CreateCustomersTables extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->string('name');
-            $table->description('description');
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -105,7 +105,7 @@ class CreateCustomersTables extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->string('name');
-            $table->description('description');
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -114,7 +114,7 @@ class CreateCustomersTables extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->string('name');
-            $table->description('description');
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -155,13 +155,13 @@ class CreateCustomersTables extends Migration
         Schema::create('customer_subscription_period', function(Blueprint $table){
             $table->id();
             $table->uuid('uuid');
-            $table->unsignedBigInteger('customer_item_subscription_id');
+            $table->unsignedBigInteger('customer_item_sub_id');
             $table->unsignedBigInteger('subscription_period_id');
-            $table->unsignedBigInteger('locatipon_id');
+            $table->unsignedBigInteger('location_id');
             $table->softDeletes();
             $table->timestamps();
             
-            $table->foreign('customer_item_subscription_id')->references('id')->on('customer_item_subscription')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('customer_item_sub_id')->references('id')->on('customer_item_subscription')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('subscription_period_id')->references('id')->on('subscription_periods')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('location_id')->references('id')->on('locations')->onUpdate('cascade')->onDelete('cascade');
             
@@ -171,7 +171,7 @@ class CreateCustomersTables extends Migration
         Schema::create('subscription_quantities', function(Blueprint $table){
             $table->id();
             $table->uuid('uuid');
-            $table->unsignedBigInteger('customer_item_subscription_id');
+            $table->unsignedBigInteger('customer_item_sub_id');
             $table->integer('amount');
             $table->unsignedBigInteger('unit_id');
             $table->unsignedBigInteger('media_id');
@@ -179,7 +179,7 @@ class CreateCustomersTables extends Migration
             $table->softDeletes();
             $table->timestamps();
             
-            $table->foreign('customer_item_subscription_id')->references('id')->on('customer_item_subscriptions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('customer_item_sub_id')->references('id')->on('customer_item_subscription')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('unit_id')->references('id')->on('units')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('media_id')->references('id')->on('media')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('subscription_period_id')->references('id')->on('subscription_periods')->onUpdate('cascade')->onDelete('cascade');
@@ -190,29 +190,29 @@ class CreateCustomersTables extends Migration
         Schema::create('customer_subscription_status', function(Blueprint $table){
             $table->id();
             $table->uuid('uuid');
-            $table->unsignedBigInteger('customer_item_subscription_id');
+            $table->unsignedBigInteger('customer_item_sub_id');
             $table->boolean('status');
             $table->softDeletes();
             $table->timestamps();
             
-            $table->foreign('customer_item_subscription_id')->references('id')->on('customer_item_subscriptions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('customer_item_sub_id')->references('id')->on('customer_item_subscription')->onUpdate('cascade')->onDelete('cascade');
             
         });
         
         Schema::create('invoices', function(Blueprint $table){
             $table->id();
             $table->uuid('uuid');
-            $table->unsignedBigInteger('customer_item_subscription_id');
+            $table->unsignedBigInteger('customer_item_sub_id');
             $table->unsignedBigInteger('subscription_period_id');
             $table->string('number');
             $table->double('amount');
             $table->unsignedBigInteger('currency_id');
             $table->dateTime('date');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
             
-            $table->foreign('customer_item_subscription_id')->references('id')->on('customer_item_subscriptions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('customer_item_sub_id')->references('id')->on('customer_item_subscription')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('subscription_period_id')->references('id')->on('subscription_periods')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('cascade');
             
@@ -221,17 +221,17 @@ class CreateCustomersTables extends Migration
         Schema::create('payments', function(Blueprint $table){
             $table->id();
             $table->uuid('uuid');
-            $table->unsignedBigInteger('customer_item_subscription_id');
+            $table->unsignedBigInteger('customer_item_sub_id');
             $table->unsignedBigInteger('subscription_period_id');
             $table->string('number');
             $table->double('amount');
             $table->unsignedBigInteger('currency_id');
             $table->dateTime('date');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->softDeletes();
             $table->timestamps();
             
-            $table->foreign('customer_item_subscription_id')->references('id')->on('customer_item_subscriptions')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('customer_item_sub_id')->references('id')->on('customer_item_subscription')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('subscription_period_id')->references('id')->on('subscription_periods')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('currency_id')->references('id')->on('currencies')->onUpdate('cascade')->onDelete('cascade');
             
@@ -257,19 +257,10 @@ class CreateCustomersTables extends Migration
             $table->foreign('customer_type_id')->references('id')->on('customer_types')->onUpdate('cascade')->onDelete('cascade');
             
         });
-       
-        Schema::create('publishers', function(Blueprint $table){
-            $table->id();
-            $table->uuid('uuid');
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
-        });
 
         Schema::create('customer_publishers', function(Blueprint $table){
             $table->id();
-            $table->uud('uuid');
+            $table->uuid('uuid');
             $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('publisher_id');
             $table->softdeletes();
@@ -297,6 +288,28 @@ class CreateCustomersTables extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customers_tables');
+        Schema::dropIfExists('customer_publisher_product');
+        Schema::dropIfExists('customer_publishers');
+        Schema::dropIfExists('customer_type_publishers');
+        Schema::dropIfExists('invoice_payment');
+        Schema::dropIfExists('payments');
+        Schema::dropIfExists('invoices');
+        Schema::dropIfExists('customer_subscription_status');
+        Schema::dropIfExists('subscription_quantities');
+        Schema::dropIfExists('customer_subscription_period');
+        Schema::dropIfExists('customer_item_subscription');
+        Schema::dropIfExists('item_media');
+        Schema::dropIfExists('media_medium');
+        Schema::dropIfExists('media');
+        Schema::dropIfExists('medium');
+        Schema::dropIfExists('subscription_status');
+        Schema::dropIfExists('item_period');
+        Schema::dropIfExists('subscription_periods');
+        Schema::dropIfExists('group_customer');
+        Schema::dropIfExists('organisation_customer');
+        Schema::dropIfExists('account_customer');
+        Schema::dropIfExists('customers');
+        Schema::dropIfExists('customer_types');
+        Schema::dropIfExists('payment_types');
     }
 }
