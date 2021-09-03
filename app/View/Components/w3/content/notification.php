@@ -6,14 +6,19 @@ use Illuminate\View\Component;
 
 class notification extends Component
 {
+    public $color;
+    public $border;
+    public $message;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($color, $border, $message)
     {
-        //
+        $this->color = $color;
+        $this->border = $border;
+        $this->message = $message;
     }
 
     /**

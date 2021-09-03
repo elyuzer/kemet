@@ -13,23 +13,15 @@ class CreateCustomersTables extends Migration
      */
     public function up()
     {
-        Schema::create('payment_types', function (Blueprint $table) {
-            $table->id();
-            $table->uuid('uuid');
-            $table->boolean('pays');
-            $table->softDeletes();
-            $table->timestamps();
-        });
-
         Schema::create('customer_types', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid');
-            $table->unsignedBigInteger('payment_type_id');
             $table->string('name');
             $table->string('description')->nullable();
+            $table->boolean('pays');
+            $table->boolean('external_publisher_document');
             $table->softDeletes();
             $table->timestamps();
-            $table->foreign('payment_type_id')->references('id')->on('payment_types')->onUpdate('cascade')->onDelete('cascade');
         });
 
         Schema::create('customers', function (Blueprint $table) {
@@ -191,11 +183,12 @@ class CreateCustomersTables extends Migration
             $table->id();
             $table->uuid('uuid');
             $table->unsignedBigInteger('customer_item_sub_id');
-            $table->boolean('status');
+            $table->unsignedBigInteger('subscription_status_id');
             $table->softDeletes();
             $table->timestamps();
             
             $table->foreign('customer_item_sub_id')->references('id')->on('customer_item_subscription')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('subscription_status_id')->references('id')->on('subscription_status')->onUpdate('cascade')->onDelete('cascade');
             
         });
         
@@ -245,18 +238,6 @@ class CreateCustomersTables extends Migration
             $table->foreign('payment_id')->references('id')->on('payments')->onUpdate('cascade')->onDelete('cascade');
             
         });
-       
-        Schema::create('customer_type_publishers', function(Blueprint $table){
-            $table->id();
-            $table->uuid('uuid');
-            $table->unsignedBigInteger('customer_type_id');
-            $table->string('description')->nullable();
-            $table->softDeletes();
-            $table->timestamps();
-            
-            $table->foreign('customer_type_id')->references('id')->on('customer_types')->onUpdate('cascade')->onDelete('cascade');
-            
-        });
 
         Schema::create('customer_publishers', function(Blueprint $table){
             $table->id();
@@ -290,7 +271,7 @@ class CreateCustomersTables extends Migration
     {
         Schema::dropIfExists('customer_publisher_product');
         Schema::dropIfExists('customer_publishers');
-        Schema::dropIfExists('customer_type_publishers');
+        Schema::dropIfExists('customer_type_publishers');///to go
         Schema::dropIfExists('invoice_payment');
         Schema::dropIfExists('payments');
         Schema::dropIfExists('invoices');
@@ -310,6 +291,6 @@ class CreateCustomersTables extends Migration
         Schema::dropIfExists('account_customer');
         Schema::dropIfExists('customers');
         Schema::dropIfExists('customer_types');
-        Schema::dropIfExists('payment_types');
+        Schema::dropIfExists('payment_types');//to go
     }
 }

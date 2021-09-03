@@ -68,6 +68,15 @@ class CreateUsersTables extends Migration
             $table->foreign('organisation_id')->references('id')->on('organisations')->onUpdate('cascade')->onDelete('cascade');
         });
 
+        Schema::create('user_group', function(Blueprint $table){
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('group_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('group_id')->references('id')->on('groups')->onUpdate('cascade')->onDelete('cascade');
+
+        });       
+
         Schema::create('account_group', function(Blueprint $table){
             $table->unsignedBigInteger('account_id');
             $table->unsignedBigInteger('group_id');
@@ -217,6 +226,7 @@ class CreateUsersTables extends Migration
         Schema::dropIfExists('phones');
         Schema::dropIfExists('emails');
         Schema::dropIfExists('account_group');
+        Schema::dropIfExists('user_group');
         Schema::dropIfExists('groups');
         Schema::dropIfExists('account_organisation');
         Schema::dropIfExists('user_organisation');

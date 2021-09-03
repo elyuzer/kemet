@@ -1,56 +1,54 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+<x-w3.layout.authentication>
+    <!-- logo start-->
+    
+    <x-w3.content.logo/>
 
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
-
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+    <!-- log ends -->
+    <form class="w3-container" action="{{route('login')}}" method="POST">
+         @csrf
+         <div class="w3-section">
+             <div class="w3-row w3-padding-small">
+                <div class="w3-col s12 m12 l12 w3-left">
+                    <label class="w3-text-dark-gray">Username(email)</label>
+                    <input class="w3-input w3-border {{($errors->has('email')) ? 'w3-border-red' : 'w3-border-dark-gray'}}" 
+                             name="email"
+                             type="text"
+                            autocomplete="off"
+                            placeholder="Enter email username" 
+                                    value="{{old('email')}}" />
+                     @if($errors->has('email'))
+                                <span class="w3-small w3-text-red">{{$errors->first('email')}}</span>
+                    @else
+                          <span>&nbsp;</span>
+                     @endif
+                </div>
             </div>
-
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full"
-                                type="password"
-                                name="password"
-                                required autocomplete="current-password" />
+            <div class="w3-row w3-padding-small">
+                  <div class="w3-col s12 m12 l12 w3-left">
+                    <label class="w3-text-dark-gray">Password</label>
+                    <input class="w3-input w3-border {{($errors->has('password')) ? 'w3-border-red' : 'w3-border-dark-gray'}}" 
+                            name="password"
+                            type="password" 
+                            autocomplete="off"
+                            placeholder="Enter password" 
+                            value="{{old('password')}}" />
+                    @if($errors->has('password'))
+                        <span class="w3-small w3-text-red">{{$errors->first('password')}}</span>
+                    @else
+                        <span>&nbsp;</span>
+                    @endif
+                 </div>
             </div>
-
-            <!-- Remember Me -->
-            <div class="block mt-4">
-                <label for="remember_me" class="inline-flex items-center">
-                    <input id="remember_me" type="checkbox" class="rounded border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" name="remember">
-                    <span class="ml-2 text-sm text-gray-600">{{ __('Remember me') }}</span>
-                </label>
+            <div class="w3-row w3-padding-small">
+                <div class="w3-col s12 m12 l12 w3-left">
+                    <button class="w3-button w3-block w3-blue w3-section w3-padding w3-hover-light-blue w3-large" type="submit">Login</button>
+                </div>
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-                @if (Route::has('password.request'))
-                    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('password.request') }}">
-                        {{ __('Forgot your password?') }}
-                    </a>
-                @endif
-
-                <x-button class="ml-3">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+        </div>
+    </form>
+    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <span class="w3-right w3-padding w3-hide-small w3-text-blue w3-hover-text-dark-gray w3-large">
+            <a href="{{ route('password.request') }}" style="text-decoration:none;">Forgot password?</a>
+        </span>
+    </div>
+</x-w3.layout.authentication>

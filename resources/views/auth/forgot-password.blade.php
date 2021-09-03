@@ -1,36 +1,40 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+<x-w3.layout.authentication>
+    <!-- logo start-->
+    
+    <x-w3.content.logo/>
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+    <!-- log ends -->
+    <x-w3.content.auth-status/>
+    
+    <form class="w3-container" method="POST" action="{{ route('password.email') }}">
+         @csrf
+        <div class="w3-section">
+            <div class="w3-row w3-padding-small">
+                <div class="w3-col s12 m12 l12 w3-left">
+                    <label class="w3-text-dark-gray">Email address</label>
+                    <input class="w3-input w3-border {{($errors->has('email')) ? 'w3-border-red' : 'w3-border-dark-gray'}}" 
+                            name="email"
+                            type="text"
+                            placeholder="Enter email to recover your logging in credentials" 
+                            value="{{old('email')}}" />
+                       @if($errors->has('email'))
+                        <span class="w3-small w3-text-red">{{$errors->first('email')}}</span>
+                    @else
+                        <span>&nbsp;</span>
+                    @endif
+                </div>
+            </div>
+                    
+            <div class="w3-row w3-padding-small">
+                <div class="w3-col s12 m12 l12 w3-left">
+                    <button class="w3-button w3-block w3-blue w3-section w3-padding w3-hover-light-blue w3-large" type="submit">Send</button>
+                </div>
+             </div>
         </div>
-
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
-
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
-        <form method="POST" action="{{ route('password.email') }}">
-            @csrf
-
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Email Password Reset Link') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+    </form>
+    <div class="w3-container w3-border-top w3-padding-16 w3-light-grey">
+        <span class="w3-right w3-padding w3-hide-small w3-text-blue w3-hover-text-dark-gray w3-large">
+            <a href="{{ route('login') }}" style="text-decoration:none;">Go back to login form.</a>
+        </span>
+    </div>
+</x-w3.layout.authentication>

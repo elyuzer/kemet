@@ -3,7 +3,10 @@
         Home
     </x-slot>
     <x-w3.content.container>
-        <x-w3.content.notification/>
+    
+        @if (session('notification'))
+            <x-w3.content.notification :color="session('notification')['background']" :border="session('notification')['border']" :message="session('notification')['message']"/>
+        @endif
 
         <h2>What is W3.CSS?</h2>
 
@@ -32,10 +35,14 @@
         <p>We have created some responsive W3CSS templates for you to use.</p>
         <p>You are free to modify, save, share, use or do whatever you want with them:</p>
 
-
         <footer class="w3-container w3-theme" style="padding:32px">
             <p>Footer information goes here</p>
         </footer>
+
+        <script>
+            myAccordion('menu-item');
+            document.getElementById('menu-item-service').className += " menu-item";
+        </script>
 
     </x-w3.content.container>
 </x-w3.layout.app>
